@@ -107,9 +107,7 @@ async def stream_research_pipeline(topic: str) -> AsyncGenerator[str, None]:
                 "messages": [
                     (
                         "user",
-                        f"Based on the following search results about '{topic}', "
-                        f"pick the most relevant URL and use the scrape_url tool to scrape it for deeper content.\n\n"
-                        f"Search Results:\n{state['search_results'][:2000]}",
+                        f"Pick the single most relevant URL from these search results and call scrape_url on it:\n\n{state['search_results'][:800]}",
                     )
                 ]
             },
@@ -139,8 +137,8 @@ async def stream_research_pipeline(topic: str) -> AsyncGenerator[str, None]:
         })
 
         research_combined = (
-            f"Search Results:\n{state['search_results']}\n\n"
-            f"Scraped Content:\n{state['reader_results']}"
+            f"Search Results:\n{state['search_results'][:1000]}\n\n"
+            f"Scraped Content:\n{state['reader_results'][:1200]}"
         )
 
         writer_chain_result = await asyncio.to_thread(

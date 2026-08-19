@@ -48,10 +48,10 @@ def scrape_url(url: str) -> str:
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        for tag in soup(["script", "style", "nav", "footer"]):
+        for tag in soup(["script", "style", "nav", "footer", "header", "aside"]):
             tag.decompose()
 
-        return soup.get_text(separator=" ", strip=True)[:3000]
+        return soup.get_text(separator=" ", strip=True)[:1500]
     except Exception as e:
         return f"Could not scrape URL: {str(e)}"
 

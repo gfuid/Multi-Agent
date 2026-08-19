@@ -21,19 +21,21 @@ llm = ChatOpenAI(
 tools = [web_search, scrape_url]
 
 
-#1st agent
+# 1st agent: Fast Search Agent
 def build_search_agent():
     return create_react_agent(
         model=llm,
         tools=[web_search],
+        prompt="You are an autonomous search agent. Call web_search immediately to find credible web information on the topic.",
     )  
 
 
-#2nd agent
+# 2nd agent: Deep Reader Agent
 def build_reader_agent():
     return create_react_agent(
         model=llm,
         tools=[scrape_url],
+        prompt="You are a reader agent. Call scrape_url immediately on the most relevant URL to extract its main text.",
     )
 
 
