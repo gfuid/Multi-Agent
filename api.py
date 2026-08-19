@@ -128,6 +128,9 @@ async def stream_research_pipeline(topic: str) -> AsyncGenerator[str, None]:
             "data": state["reader_results"],
         })
 
+        # Small breather to prevent Groq TPM rate limits
+        await asyncio.sleep(1.0)
+
         # Step 3: Writer Chain
         yield format_sse({
             "step": 3,
@@ -137,8 +140,8 @@ async def stream_research_pipeline(topic: str) -> AsyncGenerator[str, None]:
         })
 
         research_combined = (
-            f"Search Results:\n{state['search_results'][:1000]}\n\n"
-            f"Scraped Content:\n{state['reader_results'][:1200]}"
+            f"Search Results:\n{state['search_results'][:600]}\n\n"
+            f"Scraped Content:\n{state['reader_results'][:800]}"
         )
 
         writer_chain_result = await asyncio.to_thread(
@@ -158,6 +161,9 @@ async def stream_research_pipeline(topic: str) -> AsyncGenerator[str, None]:
             "data": state["writer_chain_result"],
         })
 
+        # Small breather to prevent Groq TPM rate limits
+        await asyncio.sleep(1.0)
+
         # Step 4: Critic Chain
         yield format_sse({
             "step": 4,
@@ -169,7 +175,7 @@ async def stream_research_pipeline(topic: str) -> AsyncGenerator[str, None]:
         critic_chain_result = await asyncio.to_thread(
             critic_chain.invoke,
             {
-                "report": state["writer_chain_result"],
+                "report": state["writer_chain_result"][:1200],
             },
         )
         state["critic_chain_result"] = critic_chain_result
