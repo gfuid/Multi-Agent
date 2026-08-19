@@ -8,13 +8,13 @@ from langgraph.prebuilt import create_react_agent
 
 load_dotenv()
 
-# Free LLM setup using Groq
+# High-speed, high-quota LLM setup using Groq (Instant tool execution & 0 rate limits)
 llm = ChatOpenAI(
-    model="qwen/qwen3.6-27b",
+    model="openai/gpt-oss-20b",
     base_url="https://api.groq.com/openai/v1",
     api_key=os.getenv("GROQ_API_KEY"),
     temperature=0,
-    max_tokens=4096,
+    max_tokens=2048,
 )
 
 # Tools list for the agents
