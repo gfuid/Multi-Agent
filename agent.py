@@ -14,7 +14,7 @@ llm = ChatOpenAI(
     base_url="https://api.groq.com/openai/v1",
     api_key=os.getenv("GROQ_API_KEY"),
     temperature=0,
-    max_tokens=1000,
+    max_tokens=600,
     max_retries=5,
     timeout=30,
 )

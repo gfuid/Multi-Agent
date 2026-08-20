@@ -41,6 +41,9 @@ def run_research_pipeline(topic: str) -> dict:
     print("\nsearch result:\n", state["search_results"])
 
     # Step 2: Reader agent working
+    import time
+    time.sleep(1.5)
+
     print("\n" + "=" * 50)
     print("step 2 - reader agent is scraping the URLs ...")
     print("=" * 50)
@@ -51,9 +54,7 @@ def run_research_pipeline(topic: str) -> dict:
             "messages": [
                 (
                     "user",
-                    f"Based on the following search results about '{topic}', "
-                    f"pick the most relevant URL and use the scrape_url tool to scrape it for deeper content.\n\n"
-                    f"Search Results:\n{state['search_results'][:2000]}",
+                    f"Pick the single best URL from these search results and call scrape_url on it:\n\n{state['search_results'][:600]}",
                 )
             ]
         }
@@ -67,17 +68,16 @@ def run_research_pipeline(topic: str) -> dict:
     state["reader_results"] = "\n\n".join(reader_outputs)
     print("\nreader result:\n", state["reader_results"])
 
-    # writer chain
-    import time
-    time.sleep(1.0)
+    # Step 3: Writer chain
+    time.sleep(1.5)
 
     print("\n" + "=" * 50)
     print("step 3 - writer chain is generating the report ...")
     print("=" * 50)
 
     research_combined = (
-        f"Search Results:\n{state['search_results'][:800]}\n\n"
-        f"Scraped Content:\n{state['reader_results'][:1000]}"
+        f"Search Results:\n{state['search_results'][:500]}\n\n"
+        f"Scraped Content:\n{state['reader_results'][:600]}"
     )
 
     writer_chain_result = writer_chain.invoke(
@@ -88,20 +88,18 @@ def run_research_pipeline(topic: str) -> dict:
     )
 
     state["writer_chain_result"] = writer_chain_result
-
-
     print("\nwriter chain result:\n", state["writer_chain_result"])
 
+    # Step 4: Critic chain
+    time.sleep(1.5)
 
-    # critic chain
     print("\n" + "=" * 50)
     print("step 4 - critic chain is reviewing the report ...")
     print("=" * 50)
 
     critic_chain_result = critic_chain.invoke(
         {
-             
-            "report": state["writer_chain_result"],
+            "report": state["writer_chain_result"][:1200],
         }
     )
 

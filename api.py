@@ -93,6 +93,7 @@ async def stream_research_pipeline(topic: str) -> AsyncGenerator[str, None]:
         })
 
         # Step 2: Reader Agent
+        await asyncio.sleep(1.5)
         yield format_sse({
             "step": 2,
             "status": "in_progress",
@@ -107,7 +108,7 @@ async def stream_research_pipeline(topic: str) -> AsyncGenerator[str, None]:
                 "messages": [
                     (
                         "user",
-                        f"Pick the single most relevant URL from these search results and call scrape_url on it:\n\n{state['search_results'][:800]}",
+                        f"Pick the single most relevant URL from these search results and call scrape_url on it:\n\n{state['search_results'][:500]}",
                     )
                 ]
             },
@@ -129,7 +130,7 @@ async def stream_research_pipeline(topic: str) -> AsyncGenerator[str, None]:
         })
 
         # Small breather to prevent Groq TPM rate limits
-        await asyncio.sleep(1.0)
+        await asyncio.sleep(1.5)
 
         # Step 3: Writer Chain
         yield format_sse({
@@ -140,8 +141,8 @@ async def stream_research_pipeline(topic: str) -> AsyncGenerator[str, None]:
         })
 
         research_combined = (
-            f"Search Results:\n{state['search_results'][:600]}\n\n"
-            f"Scraped Content:\n{state['reader_results'][:800]}"
+            f"Search Results:\n{state['search_results'][:500]}\n\n"
+            f"Scraped Content:\n{state['reader_results'][:600]}"
         )
 
         writer_chain_result = await asyncio.to_thread(
