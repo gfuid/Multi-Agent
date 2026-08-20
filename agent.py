@@ -10,7 +10,7 @@ load_dotenv()
 
 # High-speed LLM setup using Groq (Configured with auto-retry and safe token limits)
 llm = ChatOpenAI(
-    model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+    model=os.getenv("GROQ_MODEL", "openai/gpt-oss-20b"),
     base_url="https://api.groq.com/openai/v1",
     api_key=os.getenv("GROQ_API_KEY"),
     temperature=0,
