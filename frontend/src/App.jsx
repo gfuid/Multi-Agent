@@ -403,7 +403,7 @@ export default function App() {
                   title={`Switch to ${t.name}`}
                 >
                   <IconComponent size={14} />
-                  {t.name}
+                  <span className="theme-name">{t.name}</span>
                 </button>
               );
             })}

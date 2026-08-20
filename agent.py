@@ -10,11 +10,11 @@ load_dotenv()
 
 # High-speed LLM setup using Groq (Configured with auto-retry and safe token limits)
 llm = ChatOpenAI(
-    model="openai/gpt-oss-20b",
+    model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
     base_url="https://api.groq.com/openai/v1",
     api_key=os.getenv("GROQ_API_KEY"),
     temperature=0,
-    max_tokens=800,
+    max_tokens=1000,
     max_retries=5,
     timeout=30,
 )
@@ -28,7 +28,7 @@ def build_search_agent():
     return create_react_agent(
         model=llm,
         tools=[web_search],
-        prompt="You are an autonomous search agent. Call web_search immediately to find credible web information on the topic.",
+        prompt="You are an autonomous search agent. Use the web_search tool with a query parameter to search for credible web information.",
     )  
 
 
@@ -37,7 +37,7 @@ def build_reader_agent():
     return create_react_agent(
         model=llm,
         tools=[scrape_url],
-        prompt="You are a reader agent. Call scrape_url immediately on the most relevant URL to extract its main text.",
+        prompt="You are a reader agent. Use the scrape_url tool with a url parameter to extract full article text.",
     )
 
 
