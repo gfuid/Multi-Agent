@@ -67,17 +67,18 @@ def run_research_pipeline(topic: str) -> dict:
     state["reader_results"] = "\n\n".join(reader_outputs)
     print("\nreader result:\n", state["reader_results"])
 
-#writer chain 
+    # writer chain
+    import time
+    time.sleep(1.0)
 
     print("\n" + "=" * 50)
     print("step 3 - writer chain is generating the report ...")
     print("=" * 50)
 
-    research_combined=(
-        f"Search Results:\n{state['search_results']}\n\n"
-        f"Scraped Content:\n{state['reader_results']}"
+    research_combined = (
+        f"Search Results:\n{state['search_results'][:800]}\n\n"
+        f"Scraped Content:\n{state['reader_results'][:1000]}"
     )
-    
 
     writer_chain_result = writer_chain.invoke(
         {
